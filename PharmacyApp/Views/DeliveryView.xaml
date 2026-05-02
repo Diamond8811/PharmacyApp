@@ -1,0 +1,108 @@
+﻿<UserControl x:Class="PharmacyApp.Views.DeliveryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PharmacyApp.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0">
+            <TextBlock Text="Поставки" Style="{StaticResource WindowTitleStyle}" DockPanel.Dock="Left"/>
+            <Button Style="{StaticResource IconButtonStyle}" DockPanel.Dock="Right"
+                    Command="{Binding LoadListsCommand}" ToolTip="Обновить">
+                <TextBlock Text="↻" FontSize="16" FontWeight="Bold"/>
+            </Button>
+        </DockPanel>
+
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="220"/>
+                </Grid.ColumnDefinitions>
+
+                <ComboBox Grid.Column="0" ItemsSource="{Binding Suppliers}"
+                          SelectedItem="{Binding SelectedSupplier}"
+                          DisplayMemberPath="SupplierName"/>
+
+                <DatePicker Grid.Column="2" SelectedDate="{Binding DeliveryDate}"/>
+
+                <Button Grid.Column="4" Style="{StaticResource AccentButtonStyle}"
+                        Content="Сохранить поставку" Command="{Binding SaveDeliveryCommand}"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <DataGrid Grid.Column="0" ItemsSource="{Binding Items}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Товар" Binding="{Binding DrugName}" IsReadOnly="True" Width="*"/>
+                    <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="90"/>
+                    <DataGridTextColumn Header="Себест." Binding="{Binding CostPrice}" Width="100"/>
+                    <DataGridTextColumn Header="Партия" Binding="{Binding BatchNumber}" Width="140"/>
+                    <DataGridTextColumn Header="Годен до" Binding="{Binding ExpiryDate, StringFormat=d}" Width="110"/>
+                    <DataGridTextColumn Header="Сумма" Binding="{Binding LineTotal}" IsReadOnly="True" Width="110"/>
+                    <DataGridTemplateColumn Header="" Width="110">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource DangerButtonStyle}"
+                                        Content="Убрать"
+                                        Command="{Binding DataContext.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Добавить позицию" Style="{StaticResource CardTitleStyle}"/>
+
+                    <TextBlock Margin="0,12,0,0" Text="Товар" Style="{StaticResource SecondaryTextStyle}"/>
+                    <ComboBox ItemsSource="{Binding Drugs}" SelectedItem="{Binding SelectedDrug}" DisplayMemberPath="Name"/>
+
+                    <TextBlock Margin="0,12,0,0" Text="Количество" Style="{StaticResource SecondaryTextStyle}"/>
+                    <TextBox Text="{Binding QuantityToAdd, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Margin="0,12,0,0" Text="Себестоимость" Style="{StaticResource SecondaryTextStyle}"/>
+                    <TextBox Text="{Binding CostPriceToAdd, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Margin="0,12,0,0" Text="Номер партии" Style="{StaticResource SecondaryTextStyle}"/>
+                    <TextBox Text="{Binding BatchNumberToAdd, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Margin="0,12,0,0" Text="Срок годности" Style="{StaticResource SecondaryTextStyle}"/>
+                    <DatePicker SelectedDate="{Binding ExpiryToAdd}"/>
+
+                    <Button Margin="0,16,0,0" Style="{StaticResource AccentButtonStyle}"
+                            Content="Добавить" Command="{Binding AddItemCommand}"/>
+
+                    <Border Height="1" Background="{StaticResource BorderBrush}" Margin="0,16,0,16"/>
+
+                    <TextBlock Text="Итого по поставке" Style="{StaticResource SecondaryTextStyle}"/>
+                    <TextBlock Text="{Binding Total, StringFormat=0.00 ₽}" Style="{StaticResource PriceStyle}"/>
+
+                    <Button Margin="0,16,0,0" Style="{StaticResource SecondaryButtonStyle}"
+                            Content="Очистить" Command="{Binding ClearCommand}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

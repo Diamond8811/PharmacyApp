@@ -1,0 +1,234 @@
+﻿<UserControl x:Class="PharmacyApp.Views.DrugsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PharmacyApp.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="550" d:DesignWidth="1200">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="16"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0">
+            <TextBlock Text="Справочники" Style="{StaticResource WindowTitleStyle}" DockPanel.Dock="Left"/>
+            <Button Style="{StaticResource IconButtonStyle}" DockPanel.Dock="Right"
+                    Command="{Binding LoadAllCommand}" ToolTip="Обновить">
+                <TextBlock Text="↻" FontSize="16" FontWeight="Bold"/>
+            </Button>
+        </DockPanel>
+
+        <TabControl Grid.Row="2" Background="Transparent" BorderThickness="0">
+            <TabItem Header="Лекарственные средства">
+                <Grid Margin="0,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DataGrid Grid.Column="0" ItemsSource="{Binding Drugs}" SelectedItem="{Binding SelectedDrug}" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Категория" Binding="{Binding CategoryName}" Width="180"/>
+                            <DataGridTextColumn Header="Форма" Binding="{Binding FormName}" Width="160"/>
+                            <DataGridTextColumn Header="Производитель" Binding="{Binding Manufacturer}" Width="160"/>
+                            <DataGridTextColumn Header="Дозировка" Binding="{Binding Dosage}" Width="120"/>
+                            <DataGridTextColumn Header="Ед." Binding="{Binding Unit}" Width="80"/>
+                            <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="90"/>
+                            <DataGridTextColumn Header="Остаток" Binding="{Binding Stock}" Width="90"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="12"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="12"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="12"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="12"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="12"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="16"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Карточка лекарства" Style="{StaticResource CardTitleStyle}"/>
+
+                            <StackPanel Grid.Row="2">
+                                <TextBlock Text="Название *" Style="{StaticResource SecondaryTextStyle}"/>
+                                <TextBox Text="{Binding DrugEdit.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="4">
+                                <TextBlock Text="Категория *" Style="{StaticResource SecondaryTextStyle}"/>
+                                <ComboBox ItemsSource="{Binding Categories}"
+                                          SelectedValuePath="CategoryID"
+                                          DisplayMemberPath="CategoryName"
+                                          SelectedValue="{Binding DrugEdit.CategoryID}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="6">
+                                <TextBlock Text="Форма *" Style="{StaticResource SecondaryTextStyle}"/>
+                                <ComboBox ItemsSource="{Binding Forms}"
+                                          SelectedValuePath="FormID"
+                                          DisplayMemberPath="FormName"
+                                          SelectedValue="{Binding DrugEdit.FormID}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="8">
+                                <TextBlock Text="Производитель" Style="{StaticResource SecondaryTextStyle}"/>
+                                <TextBox Text="{Binding DrugEdit.Manufacturer, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="10">
+                                <TextBlock Text="Дозировка / Ед. / Цена *" Style="{StaticResource SecondaryTextStyle}"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="8"/>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="8"/>
+                                        <ColumnDefinition Width="120"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Grid.Column="0" Text="{Binding DrugEdit.Dosage, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Grid.Column="2" Text="{Binding DrugEdit.Unit, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Grid.Column="4" Text="{Binding DrugEdit.Price, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="12" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Button Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,0"
+                                        Content="Новый" Command="{Binding NewDrugCommand}"/>
+                                <Button Style="{StaticResource AccentButtonStyle}" Margin="0,0,8,0"
+                                        Content="Сохранить" Command="{Binding SaveDrugCommand}"/>
+                                <Button Style="{StaticResource DangerButtonStyle}"
+                                        Content="Удалить" Command="{Binding DeleteDrugCommand}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Категории">
+                <Grid Margin="0,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DataGrid Grid.Column="0" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Название" Binding="{Binding CategoryName}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="Категория" Style="{StaticResource CardTitleStyle}"/>
+                            <TextBlock Margin="0,12,0,0" Text="Название *" Style="{StaticResource SecondaryTextStyle}"/>
+                            <TextBox Text="{Binding CategoryName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                                <Button Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,0"
+                                        Content="Новая" Command="{Binding NewCategoryCommand}"/>
+                                <Button Style="{StaticResource AccentButtonStyle}" Margin="0,0,8,0"
+                                        Content="Сохранить" Command="{Binding SaveCategoryCommand}"/>
+                                <Button Style="{StaticResource DangerButtonStyle}"
+                                        Content="Удалить" Command="{Binding DeleteCategoryCommand}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Лекарственные формы">
+                <Grid Margin="0,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DataGrid Grid.Column="0" ItemsSource="{Binding Forms}" SelectedItem="{Binding SelectedForm}" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Название" Binding="{Binding FormName}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="Форма" Style="{StaticResource CardTitleStyle}"/>
+                            <TextBlock Margin="0,12,0,0" Text="Название *" Style="{StaticResource SecondaryTextStyle}"/>
+                            <TextBox Text="{Binding FormName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                                <Button Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,0"
+                                        Content="Новая" Command="{Binding NewFormCommand}"/>
+                                <Button Style="{StaticResource AccentButtonStyle}" Margin="0,0,8,0"
+                                        Content="Сохранить" Command="{Binding SaveFormCommand}"/>
+                                <Button Style="{StaticResource DangerButtonStyle}"
+                                        Content="Удалить" Command="{Binding DeleteFormCommand}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Поставщики">
+                <Grid Margin="0,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <DataGrid Grid.Column="0" ItemsSource="{Binding Suppliers}" SelectedItem="{Binding SelectedSupplier}" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Название" Binding="{Binding SupplierName}" Width="*"/>
+                            <DataGridTextColumn Header="Контакт" Binding="{Binding ContactPerson}" Width="180"/>
+                            <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="140"/>
+                            <DataGridTextColumn Header="Адрес" Binding="{Binding Address}" Width="220"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock Text="Поставщик" Style="{StaticResource CardTitleStyle}"/>
+
+                            <TextBlock Margin="0,12,0,0" Text="Название *" Style="{StaticResource SecondaryTextStyle}"/>
+                            <TextBox Text="{Binding SupplierEdit.SupplierName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <TextBlock Margin="0,12,0,0" Text="Контактное лицо" Style="{StaticResource SecondaryTextStyle}"/>
+                            <TextBox Text="{Binding SupplierEdit.ContactPerson, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <TextBlock Margin="0,12,0,0" Text="Телефон" Style="{StaticResource SecondaryTextStyle}"/>
+                            <TextBox Text="{Binding SupplierEdit.Phone, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <TextBlock Margin="0,12,0,0" Text="Адрес" Style="{StaticResource SecondaryTextStyle}"/>
+                            <TextBox Text="{Binding SupplierEdit.Address, UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                                <Button Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,8,0"
+                                        Content="Новый" Command="{Binding NewSupplierCommand}"/>
+                                <Button Style="{StaticResource AccentButtonStyle}" Margin="0,0,8,0"
+                                        Content="Сохранить" Command="{Binding SaveSupplierCommand}"/>
+                                <Button Style="{StaticResource DangerButtonStyle}"
+                                        Content="Удалить" Command="{Binding DeleteSupplierCommand}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
