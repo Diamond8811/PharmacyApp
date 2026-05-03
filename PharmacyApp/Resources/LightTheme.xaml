@@ -85,7 +85,6 @@
         <Setter Property="Background" Value="{StaticResource CardBgBrush}"/>
     </Style>
 
-    <!-- Стиль для ComboBox (полный, включая ToggleButton и элементы списка) -->
     <Style TargetType="{x:Type ComboBox}">
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
@@ -129,14 +128,12 @@
                                 </ScrollViewer>
                             </Border>
                         </Popup>
-                        <!-- Переключатель (ToggleButton) -->
                         <ToggleButton Grid.Column="0"
                                   Background="{TemplateBinding Background}"
                                   BorderBrush="{TemplateBinding BorderBrush}"
                                   BorderThickness="{TemplateBinding BorderThickness}"
                                   IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                   />
-                        <!-- Отображаемый выбранный элемент -->
                         <ContentPresenter x:Name="ContentSite"
                                       ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                       ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
@@ -164,7 +161,6 @@
         </Setter>
     </Style>
 
-    <!-- Стиль для ToggleButton внутри ComboBox -->
     <Style x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
         <Setter Property="IsTabStop" Value="False"/>
@@ -210,7 +206,6 @@
         </Setter>
     </Style>
 
-    <!-- Стиль для элементов выпадающего списка -->
     <Style TargetType="{x:Type ComboBoxItem}">
         <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
         <Setter Property="Background" Value="Transparent"/>

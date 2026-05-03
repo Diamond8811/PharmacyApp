@@ -13,25 +13,26 @@ namespace PharmacyApp.Services
         {
             try
             {
-                var hash = PasswordHelper.ComputeHash(password);
-
                 using (var db = new PharmacyDBEntities())
                 {
-                    var user =
-                        (from e in db.Employees
-                         join r in db.Roles on e.RoleID equals r.RoleID
-                         where e.Login == login
-                               && e.PasswordHash == hash
-                               && e.IsActive == true   
-                         select new SessionUser
-                         {
-                             EmployeeID = e.EmployeeID,
-                             FullName = e.FullName,
-                             RoleID = e.RoleID,
-                             RoleName = r.RoleName
-                         }).FirstOrDefault();
+                    var user = (from e in db.Employees
+                                join r in db.Roles on e.RoleID equals r.RoleID
+                                where e.Login == login
+                                      && e.IsActive == true
+                                select new { e, r }).FirstOrDefault();
 
-                    return user;
+                    if (user == null) return null;
+
+                    if (!PasswordHelper.VerifyPassword(password, user.e.PasswordHash))
+                        return null;
+
+                    return new SessionUser
+                    {
+                        EmployeeID = user.e.EmployeeID,
+                        FullName = user.e.FullName,
+                        RoleID = user.e.RoleID,
+                        RoleName = user.r.RoleName
+                    };
                 }
             }
             catch (Exception ex)
